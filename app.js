@@ -9,6 +9,8 @@ var mongoose = require('mongoose');
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var authRouter = require('./routes/auth');
+var passwordResetRouter = require('./routes/passwordReset');
+var ordersRouter = require('./routes/orders');
 
 var app = express();
 app.use(cors());
@@ -27,5 +29,13 @@ mongoose.connect(process.env.MONGODB_URI)
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/auth', authRouter);
+app.use('/password-reset', passwordResetRouter);
+app.use('/orders', ordersRouter);
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+	console.error(err.stack);
+	res.status(500).json({ error: err.message || 'Internal Server Error' });
+});
 
 module.exports = app;

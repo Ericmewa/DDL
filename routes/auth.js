@@ -11,6 +11,9 @@ router.post('/register', async (req, res) => {
     await user.save();
     res.status(201).json({ message: 'User registered successfully' });
   } catch (err) {
+    if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
+      return res.status(400).json({ error: 'Email already exists. Please use a different email.' });
+    }
     res.status(400).json({ error: err.message });
   }
 });
